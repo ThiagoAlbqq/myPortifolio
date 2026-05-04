@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ILITHIA | O Framework de Agentes Gamificado</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Light Palette - Corporate Clean */
+      --bg-primary: #fcfcfc;
+      --surface-card: #ffffff;
+      --border-light: #e5e5e5;
+      --border-heavy: #d4d4d4;
+
+      /* Emerald Accent */
+      --emerald-signal: #00b377;
+      --emerald-light: rgba(0, 179, 119, 0.1);
+
+      /* Text Colors */
+      --text-primary: #111827;
+      --text-secondary: #4b5563;
+
+      /* Code Block (Terminal contrast) */
+      --code-bg: #0f111a;
+      --code-text: #e2e8f0;
+
+      /* Typography */
+      --font-display: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --font-code: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+      /* Depth */
+      --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
+      --shadow-float: 0 20px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-feature-settings: "calt", "rlig";
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Typography Density */
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: var(--font-display);
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    h1.hero-title {
+      font-size: clamp(48px, 7vw, 80px);
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+    }
+
+    h2.section-title {
+      font-size: clamp(36px, 5vw, 52px);
+      line-height: 1.1;
+      letter-spacing: -1.2px;
+      margin-bottom: 20px;
+    }
+
+    .subtitle {
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--emerald-signal);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    p.lead {
+      font-size: 20px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      letter-spacing: -0.3px;
+    }
+
+    p.body-text {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .accent-text {
+      color: var(--emerald-signal);
+      font-weight: 600;
+    }
+
+    /* Layout */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section-gap {
+      padding: 140px 0;
+    }
+
+    /* Story Connector Line */
+    .story-line {
+      width: 2px;
+      height: 60px;
+      background: linear-gradient(to bottom, var(--emerald-signal), transparent);
+      margin: 0 auto 40px auto;
+      opacity: 0.5;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      background-color: rgba(252, 252, 252, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-light);
+      z-index: 100;
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 72px;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: -0.8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-primary);
+    }
+
+    .logo-bolt {
+      width: 18px;
+      height: 18px;
+      background: var(--emerald-signal);
+      clip-path: polygon(100% 0, 0 50%, 40% 50%, 0 100%, 100% 40%, 60% 40%);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      border-radius: 6px;
+      padding: 12px 24px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border-heavy);
+    }
+
+    .btn-ghost:hover {
+      background: var(--border-light);
+    }
+
+    .btn-primary {
+      background: var(--emerald-light);
+      color: var(--emerald-signal);
+      border: 1px solid var(--emerald-signal);
+    }
+
+    .btn-primary:hover {
+      background: var(--emerald-signal);
+      color: #fff;
+    }
+
+    /* Hero 100vh Setup */
+    .hero-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding-top: 72px;
+      /* Offset for nav */
+      background-image: radial-gradient(var(--border-heavy) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    /* Code Blocks */
+    .code-container {
+      background: var(--code-bg);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 32px auto;
+      width: max-content;
+      max-width: 100%;
+      overflow-x: auto;
+      box-shadow: var(--shadow-float);
+      text-align: left;
+    }
+
+    .code-text {
+      font-family: var(--font-code);
+      font-size: 14px;
+      color: var(--code-text);
+      line-height: 1.5;
+    }
+
+    .code-keyword {
+      color: #818cf8;
+    }
+
+    .code-string {
+      color: #a7f3d0;
+    }
+
+    .code-comment {
+      color: #6b7280;
+    }
+
+    /* Grids & Cards */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 40px;
+      margin-top: 64px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 32px;
+      margin-top: 64px;
+    }
+
+    .card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 40px 32px;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-float);
+      border-color: var(--emerald-signal);
+    }
+
+    .card h3 {
+      font-size: 24px;
+      margin-bottom: 16px;
+      padding-top: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .level-badge {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: var(--emerald-light);
+      color: var(--emerald-signal);
+      font-family: var(--font-code);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      letter-spacing: 1px;
+    }
+
+    /* GSAP Initial State */
+    .gsap-reveal {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <div class="container nav-inner">
+      <div class="logo">
+        <div class="logo-bolt"></div>
+        ILITHIA
+      </div>
+      <div style="display: flex; gap: 16px;">
+        <a href="#prologue" class="btn btn-ghost" style="border: none;">A Filosofia</a>
+        <a href="#campaign" class="btn btn-ghost" style="border: none;">Missões</a>
+        <a href="#" class="btn btn-primary">Download CLI</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CAPÍTULO 1: O CHAMADO (Hero 100vh) -->
+  <header class="hero-section">
+    <div class="container">
+      <h1 class="hero-title gsap-reveal">Abandone scripts.<br><span class="accent-text">Evolua sua Guilda.</span></h1>
+      <p class="lead gsap-reveal" style="max-width: 700px; margin: 0 auto 32px auto;">
+        Bem-vindo à nova era da automação. ILITHIA transforma seu ecossistema de desenvolvimento em um RPG, onde LLMs
+        locais ganham XP, cooperam em missões e evoluem junto com sua arquitetura.
+      </p>
+
+      <div class="code-container gsap-reveal">
+        <span class="code-text"><span class="code-keyword">npm</span> install -g ilithia-core && ollama run
+          ilithia</span>
+      </div>
+
+      <div style="display: flex; gap: 16px; justify-content: center; margin-top: 24px;" class="gsap-reveal">
+        <a href="#prologue" class="btn btn-primary">Começar a Jornada &darr;</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- CAPÍTULO 2: A FILOSOFIA (Arquitetura) -->
+  <section id="prologue" class="container section-gap">
+    <div class="gsap-reveal text-center" style="max-width: 800px; margin: 0 auto; text-align: center;">
+      <span class="subtitle">Prólogo: A Mudança de Paradigma</span>
+      <h2 class="section-title">Da rigidez à inteligência adaptativa.</h2>
+      <p class="lead">Automações tradicionais quebram na primeira exceção. O framework ILITHIA introduz o conceito de
+        "Party": um grupo de agentes especializados que inferem soluções localmente e retêm aprendizado através de um
+        sistema unificado de XP.</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="card gsap-reveal">
+        <div class="level-badge">PASSIVA</div>
+        <h3>Privacidade Absoluta</h3>
+        <p class="body-text">Nada sai da sua máquina. Desenvolvido para integração nativa com o Ollama, o motor de
+          inferência opera em total isolamento. Modelos locais tomam decisões sobre o seu código proprietário sem riscos
+          de segurança ou custos de API.</p>
+      </div>
+
+      <div class="card gsap-reveal" style="border: 2px solid var(--emerald-signal);">
+        <div class="level-badge">SISTEMA CORE</div>
+        <h3>Progressão de Experiência</h3>
+        <p class="body-text">A cada build resolvido, a cada refatoração bem-sucedida, seus agentes ganham XP. Ao subirem
+          de nível na "Skill Tree", eles desbloqueiam maior alocação de tokens de contexto e heurísticas mais
+          sofisticadas para a próxima missão.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAPÍTULO 3: A CAMPANHA (Casos de Uso) -->
+  <section id="campaign" style="background-color: #f3f4f6; padding: 140px 0;">
+    <div class="container">
+      <div class="story-line gsap-reveal"></div>
+
+      <div class="gsap-reveal" style="text-align: center;">
+        <span class="subtitle">A Campanha Principal</span>
+        <h2 class="section-title">O Diário de Missões</h2>
+        <p class="lead" style="max-width: 700px; margin: 0 auto;">Como a orquestração de agentes autônomos se aplica a
+          desafios reais de engenharia, infraestrutura e pesquisa.</p>
+      </div>
+
+      <div class="grid-3">
+        <!-- Contexto: TourDriver / DevOps -->
+        <div class="card gsap-reveal">
+          <div class="level-badge">Lvl 18 DevOps</div>
+          <h3>Domínio da Infraestrutura</h3>
+          <p class="body-text">Invoque um agente para gerenciar deployments complexos. Configure rotinas dinâmicas onde
+            a IA orquestra containers Docker, resolve conflitos de proxy no Nginx e automatiza a renovação de
+            certificados via Certbot para APIs modernas de alta disponibilidade.</p>
+        </div>
+
+        <!-- Contexto: GEX-API / Spring Boot -->
+        <div class="card gsap-reveal">
+          <div class="level-badge">Lvl 24 Arquiteto</div>
+          <h3>Integração Corporativa</h3>
+          <p class="body-text">Eleve a qualidade de projetos monolíticos ou microsserviços. Agentes especializados em
+            Java e Spring Boot podem monitorar repositórios, sincronizar branches do Git, validar a lógica de novos
+            endpoints e realizar reviews rigorosos em pull requests.</p>
+        </div>
+
+        <!-- Contexto: MOEA-H / Julia -->
+        <div class="card gsap-reveal">
+          <div class="level-badge">Lvl 30 Cientista</div>
+          <h3>Fronteira Computacional</h3>
+          <p class="body-text">Escale para pesquisa acadêmica pesada. Mapeie agentes para executar e debugar algoritmos
+            meta-heurísticos híbridos em scripts Julia. A IA monitora a eficiência do escalonamento, processa os logs e
+            formata resultados diretamente para rigorosas publicações científicas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAPÍTULO 4: O GRIMÓRIO (Código) -->
+  <section class="container section-gap">
+    <div class="story-line gsap-reveal"></div>
+
+    <div class="grid-2" style="align-items: center; margin-top: 0;">
+      <div class="gsap-reveal">
+        <span class="subtitle">O Grimório das Classes</span>
+        <h2 class="section-title">A sintaxe por trás da magia.</h2>
+        <p class="body-text" style="margin-bottom: 24px; font-size: 18px;">A genialidade do ILITHIA está na sua
+          familiaridade. Você não precisa aprender uma nova linguagem de automação; basta instanciar seus agentes como
+          objetos comuns, definir seus papéis e lançá-los em quests assíncronas.</p>
+        <a href="#" class="btn btn-primary">Explorar a API Completa &rarr;</a>
+      </div>
+
+      <div class="code-container gsap-reveal" style="width: 100%; margin: 0;">
+        <pre class="code-text">
+<span class="code-comment">// Invocando a party de agentes locais</span>
+<span class="code-keyword">import</span> { Agent, Quest, Party } <span class="code-keyword">from</span> <span class="code-string">'ilithia-core'</span>;
+
+<span class="code-keyword">const</span> devMage = <span class="code-keyword">new</span> Agent({
+  name: <span class="code-string">'TerminalSage'</span>,
+  role: <span class="code-string">'SysAdmin'</span>,
+  engine: <span class="code-string">'ollama://llama3:8b'</span>
+});
+
+<span class="code-comment">// Definindo a missão de infraestrutura</span>
+<span class="code-keyword">const</span> quest = <span class="code-keyword">new</span> Quest({
+  target: <span class="code-string">'./docker-compose.yml'</span>,
+  objective: <span class="code-string">'Optimize Nginx reverse proxy routes'</span>
+});
+
+<span class="code-keyword">const</span> result = <span class="code-keyword">await</span> devMage.execute(quest);
+
+<span class="code-keyword">if</span> (result.success) {
+  devMage.grantXP(600);
+  console.log(<span class="code-string">`Quest Clear! Agent reached Level ${devMage.level}`</span>);
+}
+</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER CTA -->
+  <footer style="background-color: var(--text-primary); color: #fff; padding: 100px 0; text-align: center;">
+    <div class="container gsap-reveal">
+      <h2 class="section-title" style="color: #fff;">Pronto para iniciar a campanha?</h2>
+      <p class="lead" style="color: #9ca3af; margin-bottom: 40px;">Junte-se à guilda de desenvolvedores construindo a
+        próxima geração de automação.</p>
+      <a href="#" class="btn btn-primary" style="font-size: 18px; padding: 16px 32px;">npm install ilithia-core</a>
+    </div>
+  </footer>
+
+  <!-- GSAP Core & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Animação de revelação sequencial
+      const revealElements = document.querySelectorAll(".gsap-reveal");
+
+      revealElements.forEach((elem) => {
+        gsap.to(elem, {
+          scrollTrigger: {
+            trigger: elem,
+            start: "top 85%", // Aciona logo antes de entrar totalmente na tela
+            toggleActions: "play none none reverse"
+          },
+          y: 0,
+          opacity: 1,
+          duration: 0.9,
+          ease: "power3.out"
+        });
+      });
+
+      // Efeito suave no nav ao rolar
+      const nav = document.querySelector('nav');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          nav.style.boxShadow = '0 4px 20px rgba(0,0,0,0.05)';
+        } else {
+          nav.style.boxShadow = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

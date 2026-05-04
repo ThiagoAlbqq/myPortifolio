@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AeroORM | O ORM de Alta Performance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap"
+    rel="stylesheet">
+
+  <style>
+    /* --- CSS TOKENS --- */
+    :root {
+      /* Colors */
+      --primary: #faff69;
+      --primary-active: #e6eb52;
+      --primary-disabled: #3a3a1f;
+      --canvas: #0a0a0a;
+      --surface-card: #1a1a1a;
+      --surface-elevated: #242424;
+      --hairline: #2a2a2a;
+      --on-primary: #0a0a0a;
+      --on-dark: #ffffff;
+      --body: #cccccc;
+      --muted: #888888;
+
+      /* Typography */
+      --font-sans: 'Inter', sans-serif;
+      --font-code: 'JetBrains Mono', monospace;
+
+      /* Spacing */
+      --section: 96px;
+      --xl: 32px;
+      --lg: 24px;
+      --md: 16px;
+      --sm: 12px;
+
+      /* Radius */
+      --rounded-md: 8px;
+      --rounded-lg: 12px;
+      --rounded-pill: 9999px;
+    }
+
+    /* --- RESET & GLOBAL --- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--canvas);
+      color: var(--on-dark);
+      font-family: var(--font-sans);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    /* --- TYPOGRAPHY CLASSES --- */
+    .display-xl {
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -2.5px;
+    }
+
+    .display-md {
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -1.5px;
+    }
+
+    .display-sm {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -1px;
+    }
+
+    .title-lg {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: -0.3px;
+    }
+
+    .title-md {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: 0;
+    }
+
+    .stat-display {
+      font-size: 56px;
+      font-weight: 700;
+      line-height: 1.0;
+      letter-spacing: -1.5px;
+      color: var(--primary);
+    }
+
+    .body-md {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--body);
+    }
+
+    .body-sm {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--muted);
+    }
+
+    .caption-uppercase {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* --- COMPONENTS --- */
+    /* Top Nav */
+    .top-nav {
+      height: 64px;
+      background-color: var(--canvas);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--xl);
+      font-size: 14px;
+      font-weight: 500;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: var(--lg);
+      color: var(--on-dark);
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--on-dark);
+      letter-spacing: -0.5px;
+    }
+
+    /* Buttons */
+    .button-primary {
+      background-color: var(--primary);
+      color: var(--on-primary);
+      padding: var(--sm) 20px;
+      border-radius: var(--rounded-md);
+      height: 40px;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .button-primary:hover {
+      background-color: var(--primary-active);
+    }
+
+    .button-secondary {
+      background-color: var(--surface-card);
+      color: var(--on-dark);
+      padding: var(--sm) 20px;
+      border-radius: var(--rounded-md);
+      height: 40px;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid var(--hairline);
+      cursor: pointer;
+    }
+
+    /* Badges */
+    .badge-yellow {
+      background-color: var(--primary);
+      color: var(--on-primary);
+      padding: 4px 12px;
+      border-radius: var(--rounded-pill);
+      display: inline-block;
+      margin-bottom: var(--md);
+    }
+
+    /* Hero Band (100vh Wrapper) */
+    .hero-wrapper {
+      min-height: calc(100vh - 64px);
+      /* 100vh descontando a altura do top-nav */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--xl) 0;
+    }
+
+    .hero-band {
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 var(--xl);
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--lg);
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: var(--md);
+      margin-top: var(--sm);
+    }
+
+    /* Cards */
+    .code-window-card {
+      background-color: var(--surface-card);
+      padding: var(--lg);
+      border-radius: var(--rounded-lg);
+      font-family: var(--font-code);
+      font-size: 14px;
+      border: 1px solid var(--hairline);
+      overflow-x: auto;
+      color: #a9b7c6;
+    }
+
+    .code-window-card .keyword {
+      color: #cc7832;
+    }
+
+    .code-window-card .string {
+      color: #6a8759;
+    }
+
+    .code-window-card .function {
+      color: #ffc66d;
+    }
+
+    .code-window-card .comment {
+      color: #808080;
+    }
+
+    /* Customer Logos */
+    .customer-logo-strip {
+      background-color: var(--canvas);
+      padding: var(--xl) 0;
+      border-top: 1px solid var(--hairline);
+      border-bottom: 1px solid var(--hairline);
+      display: flex;
+      justify-content: center;
+      gap: 64px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .customer-logo-strip span {
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--muted);
+      letter-spacing: -0.5px;
+    }
+
+    /* Layout Sections */
+    .section-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: var(--section) var(--xl);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--lg);
+    }
+
+    /* Feature Grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--lg);
+      margin-top: 48px;
+    }
+
+    .feature-card-dark {
+      background-color: var(--surface-card);
+      padding: var(--xl);
+      border-radius: var(--rounded-lg);
+      border: 1px solid var(--hairline);
+      display: flex;
+      flex-direction: column;
+      gap: var(--md);
+    }
+
+    .feature-card-yellow {
+      background-color: var(--primary);
+      padding: var(--xl);
+      border-radius: var(--rounded-lg);
+      color: var(--on-primary);
+    }
+
+    .feature-card-yellow .body-md {
+      color: var(--on-primary);
+      opacity: 0.8;
+    }
+
+    /* Tabs (DX Section) */
+    .tabs-container {
+      display: flex;
+      gap: var(--sm);
+      margin-bottom: var(--lg);
+    }
+
+    .category-tab {
+      background: transparent;
+      color: var(--muted);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 8px 14px;
+      border-radius: var(--rounded-md);
+      border: none;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .category-tab:hover {
+      color: var(--on-dark);
+    }
+
+    .category-tab-active {
+      background-color: var(--surface-card);
+      color: var(--on-dark);
+    }
+
+    /* Pricing Grid */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--lg);
+      margin-top: 48px;
+    }
+
+    .pricing-tier-card {
+      background-color: var(--surface-card);
+      padding: var(--xl);
+      border-radius: var(--rounded-lg);
+      border: 1px solid var(--hairline);
+    }
+
+    .pricing-tier-card-featured {
+      background-color: var(--primary);
+      padding: var(--xl);
+      border-radius: var(--rounded-lg);
+      color: var(--on-primary);
+    }
+
+    .pricing-price {
+      margin: 16px 0 24px 0;
+    }
+
+    .pricing-list li {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+    }
+
+    .pricing-list li::before {
+      content: "✓";
+      font-weight: 700;
+    }
+
+    /* Cores forçadas no card amarelo */
+    .pricing-tier-card-featured .title-lg,
+    .pricing-tier-card-featured .display-sm,
+    .pricing-tier-card-featured .body-md,
+    .pricing-tier-card-featured .pricing-list li {
+      color: var(--on-primary);
+    }
+
+    /* CTA Band */
+    .cta-band-yellow {
+      background-color: var(--primary);
+      color: var(--on-primary);
+      padding: 64px;
+      border-radius: var(--rounded-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: var(--xl);
+    }
+
+    /* Footer */
+    .footer {
+      background-color: var(--canvas);
+      padding: 64px var(--xl);
+      border-top: 1px solid var(--hairline);
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 64px;
+    }
+
+    .footer-links {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--lg);
+    }
+
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sm);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-band {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-wrapper {
+        min-height: auto;
+        padding: var(--section) 0;
+      }
+
+      .display-xl {
+        font-size: 56px;
+      }
+
+      .feature-grid,
+      .pricing-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-grid,
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .display-xl {
+        font-size: 40px;
+        letter-spacing: -1.5px;
+      }
+
+      .footer {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-links {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- TOP NAV -->
+  <nav class="top-nav">
+    <div class="logo">AeroORM</div>
+    <div class="nav-links">
+      <a href="#">Produto</a>
+      <a href="#">Documentação</a>
+      <a href="#">Benchmarks</a>
+      <a href="#">Preços</a>
+    </div>
+    <div style="display: flex; gap: 16px; align-items: center;">
+      <a href="#" style="color: var(--muted);">Sign in</a>
+      <button class="button-primary">Get Started</button>
+    </div>
+  </nav>
+
+  <!-- HERO (100vh Wrapper) -->
+  <header class="hero-wrapper">
+    <div class="hero-band">
+      <div class="hero-content">
+        <div>
+          <span class="caption-uppercase badge-yellow">AeroORM v2.0</span>
+        </div>
+        <h1 class="display-xl">A ponte definitiva para o seu banco de dados.</h1>
+        <p class="body-md">Tipagem forte de ponta a ponta, zero overhead de compilação e consultas ultrarrápidas. O ORM
+          desenhado para ambientes de engenharia de alta performance.</p>
+        <div class="hero-actions">
+          <button class="button-primary">Instalar AeroORM</button>
+          <button class="button-secondary">Ler a Documentação</button>
+        </div>
+      </div>
+      <div class="code-window-card">
+        <pre><code><span class="comment">// AeroORM client initialization</span>
+<span class="keyword">import</span> { AeroClient } <span class="keyword">from</span> <span class="string">'@aero/orm'</span>;
+
+<span class="keyword">const</span> db = <span class="keyword">new</span> <span class="function">AeroClient</span>({
+  url: process.env.DATABASE_URL,
+  logLevel: <span class="string">'perf'</span>
+});
+
+<span class="comment">// Type-safe ultra-fast query</span>
+<span class="keyword">const</span> users = <span class="keyword">await</span> db.users.<span class="function">findMany</span>({
+  where: { status: <span class="string">'ACTIVE'</span> },
+  select: { id: <span class="keyword">true</span>, email: <span class="keyword">true</span> },
+  limit: <span class="function">100000</span>
+});
+</code></pre>
+      </div>
+    </div>
+  </header>
+
+  <!-- CUSTOMER LOGOS -->
+  <section class="customer-logo-strip">
+    <span>ACME CORP</span>
+    <span>GLOBEX</span>
+    <span>INITECH</span>
+    <span>SOYLENT</span>
+    <span>UMBRELLA</span>
+  </section>
+
+  <!-- STATS -->
+  <section class="section-container border-bottom" style="border-bottom: 1px solid var(--hairline);">
+    <div class="stats-grid">
+      <div>
+        <div class="stat-display">0.2ms</div>
+        <div class="title-md">Overhead por query</div>
+        <p class="body-sm" style="margin-top: 8px;">Geração de SQL direto no motor, ignorando abstrações lentas.</p>
+      </div>
+      <div>
+        <div class="stat-display">94k+</div>
+        <div class="title-md">Estrelas no GitHub</div>
+        <p class="body-sm" style="margin-top: 8px;">Apoiado por uma comunidade global de desenvolvedores backend.</p>
+      </div>
+      <div>
+        <div class="stat-display">10x</div>
+        <div class="title-md">Mais rápido</div>
+        <p class="body-sm" style="margin-top: 8px;">Comparado aos principais ORMs tradicionais do ecossistema.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section-container">
+    <h2 class="display-md">Engenharia em cada detalhe.</h2>
+    <div class="feature-grid">
+      <div class="feature-card-yellow">
+        <h3 class="title-md">Segurança de Tipos Estrita</h3>
+        <p class="body-md" style="margin-top: 12px;">Esquemas inferidos nativamente. Se o seu código compila, sua query
+          está correta. Sem exceções em runtime.</p>
+      </div>
+      <div class="feature-card-dark">
+        <h3 class="title-md">Conexão via Edge</h3>
+        <p class="body-md" style="margin-top: 12px;">Construído para rodar em ambientes serverless como Vercel,
+          Cloudflare Workers e Deno Deploy nativamente.</p>
+      </div>
+      <div class="feature-card-dark">
+        <h3 class="title-md">Migrations sem atrito</h3>
+        <p class="body-md" style="margin-top: 12px;">Sincronize seu esquema de forma declarativa. O motor cuida do diff
+          e gera as migrações SQL mais eficientes possíveis.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEVELOPER EXPERIENCE (TABS) -->
+  <section class="section-container">
+    <h2 class="display-md" style="margin-bottom: 24px;">Escrito para humanos, otimizado para máquinas.</h2>
+    <div class="tabs-container">
+      <button class="category-tab category-tab-active">Complex Joins</button>
+      <button class="category-tab">Batch Insert</button>
+      <button class="category-tab">Schema Definition</button>
+    </div>
+    <div class="code-window-card">
+      <pre><code><span class="comment">// Resolvendo relações complexas sem N+1 queries</span>
+<span class="keyword">const</span> report = <span class="keyword">await</span> db.orders.<span class="function">findMany</span>({
+  with: {
+    customer: { select: { name: <span class="keyword">true</span> } },
+    items: {
+      with: { product: <span class="keyword">true</span> }
+    }
+  },
+  where: (orders, { gte }) => <span class="function">gte</span>(orders.total, <span class="string">1500</span>),
+  orderBy: (orders, { desc }) => <span class="function">desc</span>(orders.createdAt)
+});
+</code></pre>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section-container">
+    <h2 class="display-md">Preços que escalam com você.</h2>
+    <div class="pricing-grid">
+      <!-- Tier 1 -->
+      <div class="pricing-tier-card">
+        <h3 class="title-lg">Hobby</h3>
+        <div class="pricing-price display-sm">Grátis</div>
+        <p class="body-md" style="margin-bottom: 24px;">Perfeito para projetos pessoais e testes rápidos em ambiente
+          dev.</p>
+        <button class="button-secondary" style="width: 100%; margin-bottom: 32px;">Começar Grátis</button>
+        <ul class="pricing-list body-md">
+          <li>Queries ilimitadas</li>
+          <li>Suporte da Comunidade</li>
+          <li>Conexões Edge limitadas</li>
+        </ul>
+      </div>
+
+      <!-- Tier 2 (Featured Yellow) -->
+      <div class="pricing-tier-card-featured">
+        <h3 class="title-lg">Pro</h3>
+        <div class="pricing-price display-sm">$29<span style="font-size: 16px; font-weight: 500;">/mês</span></div>
+        <p class="body-md" style="margin-bottom: 24px;">Para startups e equipes entregando produtos em produção.</p>
+        <button class="button-primary"
+          style="background-color: var(--canvas); color: var(--on-dark); width: 100%; margin-bottom: 32px;">Assinar
+          Pro</button>
+        <ul class="pricing-list body-md">
+          <li>Tudo do plano Hobby</li>
+          <li>Edge Caching Nativo</li>
+          <li>Telemetria e Logs detalhados</li>
+          <li>Suporte via Email</li>
+        </ul>
+      </div>
+
+      <!-- Tier 3 -->
+      <div class="pricing-tier-card">
+        <h3 class="title-lg">Enterprise</h3>
+        <div class="pricing-price display-sm">Custom</div>
+        <p class="body-md" style="margin-bottom: 24px;">Infraestrutura dedicada, segurança avançada e SLAs garantidos.
+        </p>
+        <button class="button-secondary" style="width: 100%; margin-bottom: 32px;">Falar com Vendas</button>
+        <ul class="pricing-list body-md">
+          <li>Tudo do plano Pro</li>
+          <li>Instância Dedicada</li>
+          <li>SSO & SAML</li>
+          <li>Engenheiro de Suporte Designado</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BAND -->
+  <section class="section-container">
+    <div class="cta-band-yellow">
+      <h2 class="display-md">Pronto para acelerar seu backend?</h2>
+      <button class="button-primary"
+        style="background-color: var(--canvas); color: var(--on-dark); border: none; font-size: 16px; padding: 16px 32px; height: auto;">
+        npm install @aero/orm
+      </button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div>
+      <div class="logo">AeroORM</div>
+      <p class="body-sm" style="margin-top: 16px;">O banco de dados encontra a alta performance. Nascido no canvas
+        escuro, acelerado em amarelo elétrico.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4 class="title-sm" style="color: var(--on-dark);">Produto</h4>
+        <a href="#" class="body-sm">Features</a>
+        <a href="#" class="body-sm">Benchmarks</a>
+        <a href="#" class="body-sm">Edge Connect</a>
+      </div>
+      <div class="footer-col">
+        <h4 class="title-sm" style="color: var(--on-dark);">Use Cases</h4>
+        <a href="#" class="body-sm">Serverless</a>
+        <a href="#" class="body-sm">Microsserviços</a>
+        <a href="#" class="body-sm">Enterprise</a>
+      </div>
+      <div class="footer-col">
+        <h4 class="title-sm" style="color: var(--on-dark);">Recursos</h4>
+        <a href="#" class="body-sm">Documentação</a>
+        <a href="#" class="body-sm">Guias</a>
+        <a href="#" class="body-sm">API Reference</a>
+      </div>
+      <div class="footer-col">
+        <h4 class="title-sm" style="color: var(--on-dark);">Empresa</h4>
+        <a href="#" class="body-sm">Sobre</a>
+        <a href="#" class="body-sm">Blog</a>
+        <a href="#" class="body-sm">Contato</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+
+</html>

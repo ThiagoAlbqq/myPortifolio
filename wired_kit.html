@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wired Inspired UI | The Editorial System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lora:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@400;700&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            wired: {
+              black: '#000000',
+              ink: '#1a1a1a',
+              white: '#ffffff',
+              link: '#057dbc',
+              hairline: '#e2e8f0',
+              caption: '#757575'
+            }
+          },
+          fontFamily: {
+            display: ['"Playfair Display"', 'serif'],
+            body: ['"Lora"', 'serif'],
+            ui: ['"Inter"', 'sans-serif'],
+            mono: ['"Space Mono"', 'monospace'],
+          },
+          letterSpacing: {
+            kicker: '0.1em',
+            display: '-0.02em'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #ffffff;
+      color: #1a1a1a;
+      overflow-x: hidden;
+    }
+
+    /* Regra de Ouro: Sem cantos arredondados, sem sombras */
+    * {
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
+
+    /* Exceção: Pílulas de texto (Spans) e Ícones Redondos */
+    .text-pill {
+      border-radius: 1920px !important;
+    }
+
+    .icon-btn {
+      border-radius: 50% !important;
+    }
+
+    /* Grid Editoriais */
+    .hairline-b {
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .hairline-r {
+      border-right: 1px solid #e2e8f0;
+    }
+
+    .hairline-l {
+      border-left: 1px solid #e2e8f0;
+    }
+
+    .hairline-t {
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .rule-black-b {
+      border-bottom: 2px solid #000000;
+    }
+
+    .rule-black-t {
+      border-top: 2px solid #000000;
+    }
+
+    .hover-link:hover {
+      color: #057dbc;
+    }
+
+    .hover-link-underline:hover {
+      color: #057dbc;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+
+    .btn-primary {
+      transition: background-color 150ms ease, color 150ms ease;
+    }
+
+    /* Input Reset */
+    input:focus {
+      outline: none;
+      border-color: #000000;
+    }
+  </style>
+</head>
+
+<body class="antialiased selection:bg-wired-black selection:text-wired-white">
+
+  <!-- Top Utility Bar -->
+  <div
+    class="bg-wired-black w-full h-10 flex items-center px-4 md:px-8 justify-between text-wired-white font-mono text-[12px] tracking-kicker uppercase">
+    <div class="flex gap-6">
+      <a href="#" class="hover-link">Manifesto</a>
+      <span class="text-wired-caption hidden md:inline">|</span>
+      <a href="#components" class="hover-link hidden md:inline">Componentes</a>
+    </div>
+    <div class="flex gap-4">
+      <a href="#" class="hover-link">Login Cliente</a>
+    </div>
+  </div>
+
+  <!-- Main Nav -->
+  <nav
+    class="border-b-2 border-wired-black px-4 md:px-8 py-6 flex justify-between items-center bg-wired-white sticky top-0 z-50">
+    <div class="font-display font-bold text-3xl tracking-tighter">WIRED_KIT</div>
+    <ul class="hidden md:flex gap-8 font-ui text-[14px] font-bold">
+      <li><a href="#system" class="hover-link-underline">Os Princípios</a></li>
+      <li><a href="#components" class="hover-link-underline">UI Showcase</a></li>
+      <li><a href="#pricing" class="hover-link-underline">Assinatura</a></li>
+    </ul>
+    <button class="md:hidden font-mono text-[12px] uppercase tracking-kicker">Menu</button>
+  </nav>
+
+  <!-- Ribbon: Hero -->
+  <div
+    class="bg-wired-black text-wired-white font-mono text-[12px] tracking-kicker font-bold uppercase py-2 px-4 md:px-8">
+    LANCAMENTO_01
+  </div>
+
+  <!-- 1. HERO SECTION -->
+  <main
+    class="max-w-[1600px] mx-auto px-4 md:px-8 py-12 md:py-24 grid grid-cols-1 md:grid-cols-12 gap-8 border-b border-wired-black">
+    <div class="md:col-span-8 flex flex-col justify-center gs-fade">
+      <div class="font-mono text-[13px] tracking-kicker uppercase text-wired-ink mb-2">The Framework</div>
+      <h1 class="font-display text-[48px] md:text-[64px] leading-[0.95] tracking-display text-wired-ink mb-6">
+        Construído para a banca de jornais digital. Sem sombras. Sem desculpas.
+      </h1>
+      <p class="font-body text-[19px] leading-[1.5] text-wired-ink mb-10 max-w-3xl">
+        A disciplina tipográfica da Condé Nast convertida em código. Um design system impulsionado por contraste, grades
+        rígidas e uma hierarquia que exige respeito. Se um elemento não tem utilidade para a leitura, ele não entra na
+        tela.
+      </p>
+      <div class="flex gap-4 font-ui">
+        <a href="#pricing"
+          class="btn-primary inline-flex items-center justify-center border-2 border-wired-black bg-wired-white text-wired-black font-bold text-[16px] px-8 py-3 uppercase tracking-wide hover:bg-wired-black hover:text-wired-white">
+          Comprar Licença
+        </a>
+      </div>
+    </div>
+
+    <div class="md:col-span-4 flex flex-col gap-4 border-t border-wired-hairline md:border-t-0 pt-6 md:pt-0 gs-fade"
+      style="transition-delay: 100ms;">
+      <img src="https://images.unsplash.com/photo-1557425955-df376b5903c8?q=80&w=800&auto=format&fit=crop"
+        alt="Editorial Grid" class="w-full aspect-[4/3] object-cover grayscale">
+      <div>
+        <span class="font-mono text-[12px] tracking-kicker font-bold uppercase text-wired-ink">Artigo de Fundo</span>
+        <h3
+          class="font-ui font-bold text-[17px] leading-tight text-wired-ink mt-1 hover:text-wired-link transition-colors cursor-pointer underline">
+          Por que abandonamos a elevação e voltamos ao papel.
+        </h3>
+      </div>
+    </div>
+  </main>
+
+  <!-- 2. PRINCIPLES (Numbered List) -->
+  <section id="system" class="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-3">
+    <div class="p-6 md:p-8 hairline-r md:border-b-0 hairline-b gs-fade">
+      <div class="flex gap-4 items-start">
+        <span class="font-display text-[48px] leading-[0.9] text-wired-ink mt-1">01</span>
+        <div>
+          <span class="font-mono text-[13px] tracking-kicker uppercase text-wired-caption">Tipografia</span>
+          <h2 class="font-ui font-bold text-[20px] leading-[1.2] mt-2 mb-3">Quatro Fontes. Quatro Trabalhos.</h2>
+          <p class="font-body text-[16px] text-wired-ink leading-[1.5]">
+            Serifas Display gritam, humanistas são lidas, sans-serifs são clicadas e mono-espaçadas rotulam. Uma
+            separação rígida.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="p-6 md:p-8 hairline-r md:border-b-0 hairline-b gs-fade">
+      <div class="flex gap-4 items-start">
+        <span class="font-display text-[48px] leading-[0.9] text-wired-ink mt-1">02</span>
+        <div>
+          <span class="font-mono text-[13px] tracking-kicker uppercase text-wired-caption">Estrutura</span>
+          <h2 class="font-ui font-bold text-[20px] leading-[1.2] mt-2 mb-3">A Morte dos Cards.</h2>
+          <p class="font-body text-[16px] text-wired-ink leading-[1.5]">
+            Nada de caixas flutuantes. Separe o conteúdo com réguas de 1px (hairlines) ou espaços em branco absolutos e
+            intencionais.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="p-6 md:p-8 hairline-b gs-fade">
+      <div class="flex gap-4 items-start">
+        <span class="font-display text-[48px] leading-[0.9] text-wired-ink mt-1">03</span>
+        <div>
+          <span class="font-mono text-[13px] tracking-kicker uppercase text-wired-caption">Cores</span>
+          <h2 class="font-ui font-bold text-[20px] leading-[1.2] mt-2 mb-3">Escala de Cinza Pura.</h2>
+          <p class="font-body text-[16px] text-wired-ink leading-[1.5]">
+            O único local onde as cores existem é na fotografia e no azul exato (#057dbc) usado no estado de hover dos
+            links.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ribbon: Components -->
+  <div
+    class="bg-wired-black text-wired-white font-mono text-[12px] tracking-kicker font-bold uppercase py-2 px-4 md:px-8 mt-16">
+    COMPONENTES CRUS
+  </div>
+
+  <!-- 3. UI SHOWCASE GRID -->
+  <section id="components" class="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-3 border-b border-wired-black">
+
+    <!-- Showcase 1: Buttons & Tags -->
+    <div class="p-8 hairline-r hairline-b md:hairline-b-0 gs-fade">
+      <span class="font-mono text-[13px] tracking-kicker uppercase text-wired-ink mb-6 block">Interação</span>
+      <div class="space-y-6">
+        <div>
+          <button
+            class="btn-primary w-full border-2 border-wired-black bg-wired-white text-wired-black font-ui font-bold text-[16px] px-6 py-3 uppercase tracking-wide hover:bg-wired-black hover:text-wired-white">
+            Botão Primário
+          </button>
+          <p class="font-ui text-[14px] text-wired-caption mt-2">Borda sólida de 2px. Inversão no hover.</p>
+        </div>
+        <div>
+          <a href="#"
+            class="font-ui font-bold text-[14px] text-wired-ink underline decoration-1 underline-offset-4 hover-link">Link
+            Terciário Sublinhado</a>
+        </div>
+        <div class="pt-4 flex items-center gap-4">
+          <span
+            class="text-pill bg-wired-black text-wired-white font-mono text-[11px] uppercase px-3 py-1 tracking-wide">Breaking</span>
+          <span
+            class="text-pill bg-red-600 text-wired-white font-mono text-[11px] uppercase px-3 py-1 tracking-wide">Live</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Showcase 2: Forms -->
+    <div class="p-8 hairline-r hairline-b md:hairline-b-0 gs-fade">
+      <span class="font-mono text-[13px] tracking-kicker uppercase text-wired-ink mb-6 block">Formulários</span>
+      <div class="space-y-6">
+        <div>
+          <label class="font-ui font-bold text-[14px] block mb-2">E-mail Corporativo</label>
+          <input type="email" placeholder="nome@empresa.com"
+            class="w-full border-2 border-wired-black p-3 font-ui text-[16px] bg-wired-white text-wired-ink placeholder-wired-caption transition-colors">
+        </div>
+        <div>
+          <label class="font-ui font-bold text-[14px] block mb-2">Estado Inativo</label>
+          <input type="text" placeholder="Apenas leitura..." disabled
+            class="w-full border-2 border-wired-caption p-3 font-ui text-[16px] bg-gray-50 text-wired-caption cursor-not-allowed">
+        </div>
+      </div>
+    </div>
+
+    <!-- Showcase 3: Text Tiles -->
+    <div class="p-8 gs-fade">
+      <span class="font-mono text-[13px] tracking-kicker uppercase text-wired-ink mb-6 block">Story Tiles</span>
+      <div class="flex flex-col gap-2">
+        <span class="font-mono text-[12px] tracking-kicker font-bold uppercase text-wired-ink">Tecnologia</span>
+        <h3
+          class="font-display text-[26px] leading-[1.08] text-wired-ink hover:text-wired-link transition-colors cursor-pointer">
+          A IA não vai substituir o bom design tipográfico.
+        </h3>
+        <p class="font-body text-[16px] text-wired-ink leading-[1.5] mt-2">
+          Enquanto ferramentas generativas produzem gradientes, a leitura de fôlego exige o silêncio visual do branco no
+          preto.
+        </p>
+        <span class="font-mono text-[12px] text-wired-caption mt-4">HÁ 2 HORAS</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. EDITORIAL FEATURE (Deep Dive) -->
+  <section class="max-w-[1600px] mx-auto py-24 px-4 md:px-8 border-b border-wired-black">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <div class="gs-fade">
+        <img src="https://images.unsplash.com/photo-1506544777-64cfbe1142df?q=80&w=1200&auto=format&fit=crop"
+          alt="Press" class="w-full aspect-[16/9] object-cover grayscale border-b-2 border-wired-black">
+        <p class="font-body text-[12px] font-bold tracking-wide mt-2 text-wired-caption uppercase">Foto: Editorial
+          Archive / Unsplash</p>
+      </div>
+      <div class="gs-fade">
+        <span class="font-mono text-[13px] tracking-kicker font-bold uppercase text-wired-ink mb-4 block">Performance
+          Editorial</span>
+        <h2 class="font-display text-[42px] leading-[1.05] tracking-display text-wired-ink mb-6">
+          A página respira onde importa.
+        </h2>
+        <p class="font-body text-[19px] leading-[1.5] text-wired-ink mb-6">
+          Nós tratamos o espaço em branco da mesma forma que um diretor de arte de revista trata as margens: é o
+          silêncio em volta da fonte, não uma escolha de estilo. A página nunca respira excessivamente. Ela respira
+          editorialmente.
+        </p>
+        <p class="font-body text-[16px] leading-[1.5] text-wired-ink mb-8">
+          Nenhum "box-shadow" foi usado na renderização deste sistema. A profundidade vem exclusivamente do peso da
+          regra tipográfica: desde a hairline invisível de 1px até a pesada marcação de seção de 2px. É por isso que
+          carrega rápido e lê melhor.
+        </p>
+        <a href="#"
+          class="font-ui font-bold text-[16px] text-wired-ink underline decoration-2 underline-offset-4 hover-link">Ler
+          Manifesto Completo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ribbon: Pricing -->
+  <div
+    class="bg-wired-black text-wired-white font-mono text-[12px] tracking-kicker font-bold uppercase py-2 px-4 md:px-8">
+    LICENCIAMENTO
+  </div>
+
+  <!-- 5. PRICING (No Cards allowed) -->
+  <section id="pricing" class="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-2 border-b-2 border-wired-black">
+
+    <!-- Standard -->
+    <div class="p-8 md:p-16 hairline-r hairline-b md:hairline-b-0 gs-fade flex flex-col h-full">
+      <div class="font-mono text-[13px] tracking-kicker uppercase text-wired-caption mb-4">Uso Individual</div>
+      <h3 class="font-display text-[48px] leading-none text-wired-ink mb-2">Standard</h3>
+      <div class="font-mono text-[24px] mb-8">US$ 49</div>
+
+      <ul class="font-ui text-[16px] space-y-4 mb-12 flex-grow">
+        <li class="flex items-start gap-3 border-b border-wired-hairline pb-4">
+          <span class="font-mono font-bold mt-1">+</span> Arquivos Figma e React completos
+        </li>
+        <li class="flex items-start gap-3 border-b border-wired-hairline pb-4">
+          <span class="font-mono font-bold mt-1">+</span> Mais de 120 componentes mapeados
+        </li>
+        <li class="flex items-start gap-3 border-b border-wired-hairline pb-4">
+          <span class="font-mono font-bold mt-1">+</span> Licença para 1 projeto comercial
+        </li>
+      </ul>
+
+      <button
+        class="btn-primary w-full border-2 border-wired-black bg-wired-white text-wired-black font-ui font-bold text-[16px] px-6 py-4 uppercase tracking-wide hover:bg-wired-black hover:text-wired-white">
+        Adquirir Standard
+      </button>
+    </div>
+
+    <!-- Enterprise -->
+    <div class="p-8 md:p-16 bg-gray-50 flex flex-col h-full gs-fade">
+      <div class="font-mono text-[13px] tracking-kicker uppercase text-wired-ink mb-4 font-bold">Times & Agências</div>
+      <h3 class="font-display text-[48px] leading-none text-wired-ink mb-2">Unlimited</h3>
+      <div class="font-mono text-[24px] mb-8">US$ 149</div>
+
+      <ul class="font-ui text-[16px] space-y-4 mb-12 flex-grow">
+        <li class="flex items-start gap-3 border-b border-wired-hairline pb-4">
+          <span class="font-mono font-bold mt-1 text-wired-link">+</span> Tudo do plano Standard
+        </li>
+        <li class="flex items-start gap-3 border-b border-wired-hairline pb-4">
+          <span class="font-mono font-bold mt-1 text-wired-link">+</span> Licença de projetos ilimitada
+        </li>
+        <li class="flex items-start gap-3 border-b border-wired-hairline pb-4">
+          <span class="font-mono font-bold mt-1 text-wired-link">+</span> Updates gratuitos por 1 ano
+        </li>
+      </ul>
+
+      <button
+        class="btn-primary w-full border-2 border-wired-black bg-wired-black text-wired-white font-ui font-bold text-[16px] px-6 py-4 uppercase tracking-wide hover:bg-wired-white hover:text-wired-black">
+        Adquirir Unlimited
+      </button>
+    </div>
+
+  </section>
+
+  <!-- 6. NEWSLETTER (Following the strict input rules) -->
+  <section class="max-w-4xl mx-auto py-24 px-4 text-center gs-fade">
+    <span class="font-mono text-[13px] tracking-kicker uppercase text-wired-ink mb-4 block">Dispatch</span>
+    <h2 class="font-display text-[36px] leading-[1.1] mb-6">Receba as atualizações do sistema.</h2>
+    <p class="font-body text-[16px] text-wired-caption mb-8">Notificações sem ruído. Apenas changelogs e novas
+      documentações.</p>
+
+    <form class="flex flex-col md:flex-row gap-4 justify-center max-w-xl mx-auto">
+      <input type="email" placeholder="Seu endereço de e-mail"
+        class="flex-grow border-2 border-wired-black p-3 font-ui text-[16px] placeholder-wired-caption bg-wired-white">
+      <button type="submit"
+        class="btn-primary border-2 border-wired-black bg-wired-black text-wired-white font-ui font-bold text-[16px] px-8 py-3 uppercase tracking-wide hover:bg-wired-white hover:text-wired-black">
+        Assinar
+      </button>
+    </form>
+  </section>
+
+  <!-- 7. INVERTED FOOTER -->
+  <footer class="bg-wired-ink text-wired-white pt-16 pb-8 px-8 border-t-[8px] border-wired-black">
+    <div class="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 mb-16">
+      <div class="md:col-span-4">
+        <div class="font-display font-bold text-3xl tracking-tighter mb-4">WIRED_KIT</div>
+        <p class="font-body text-[14px] text-wired-caption max-w-xs">A arquitetura editorial definitiva para aplicações
+          web que priorizam a leitura.</p>
+      </div>
+      <div class="md:col-span-8 flex flex-col md:flex-row gap-12 md:justify-end font-ui text-[14px]">
+        <div class="flex flex-col gap-4">
+          <span class="font-mono text-[12px] tracking-kicker uppercase text-wired-caption">Sistema</span>
+          <a href="#" class="hover:text-wired-link transition-colors">Componentes</a>
+          <a href="#" class="hover:text-wired-link transition-colors">Figma File</a>
+          <a href="#" class="hover:text-wired-link transition-colors">Documentação</a>
+        </div>
+        <div class="flex flex-col gap-4">
+          <span class="font-mono text-[12px] tracking-kicker uppercase text-wired-caption">Legal</span>
+          <a href="#" class="hover:text-wired-link transition-colors">Licença de Uso</a>
+          <a href="#" class="hover:text-wired-link transition-colors">Privacidade</a>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="border-t border-wired-caption/30 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center">
+      <span class="font-mono text-[11px] text-wired-caption uppercase tracking-wider">© 2026 Wired Kit. Todos os
+        direitos reservados.</span>
+      <span class="font-mono text-[11px] text-wired-caption uppercase tracking-wider">Desenhado no grid.</span>
+    </div>
+  </footer>
+
+  <!-- GSAP Animations -->
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Animação brutalista: fade rápido, sem elásticos.
+    gsap.utils.toArray('.gs-fade').forEach(element => {
+      gsap.from(element, {
+        scrollTrigger: {
+          trigger: element,
+          start: "top 85%",
+        },
+        y: 15,
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.out"
+      });
+    });
+  </script>
+</body>
+
+</html>
